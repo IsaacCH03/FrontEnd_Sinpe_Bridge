@@ -52,7 +52,9 @@ export default function TransactionHistoryScreen() {
         </View>
 
         <View style={styles.cardBody}>
-          <Text style={styles.textRow}>📱 Origen: {item.senderNumber}</Text>
+          <Text style={styles.textRow}>
+            📱 Origen: {item.senderNumber ? item.senderNumber : "No registrado"}
+          </Text>
           <Text style={styles.textRow}>📅 Fecha: {new Date(item.paymentDate).toLocaleString()}</Text>
           <Text style={styles.textRow}>📝 Detalle: {item.verificationResult}</Text>
           
