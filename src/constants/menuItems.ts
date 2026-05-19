@@ -1,5 +1,11 @@
 export const menuItems = [
   {
+    title: "Ordenes",
+    description: "Lista de Ordenes Disponibles.",
+    icon: "🛒",
+    color: "#7C3AED",
+  },
+  {
     title: "Nueva orden",
     description: "Crear una orden para cobrar por SINPE.",
     icon: "🛒",

@@ -21,7 +21,7 @@ export type OrderResponse = {
 };
 
 export async function createOrder(
-  data: CreateOrderRequest
+  data: CreateOrderRequest,
 ): Promise<OrderResponse> {
   const response = await fetch(`${API_URL}/orders`, {
     method: "POST",
@@ -49,6 +49,16 @@ export async function getPendingOrder(): Promise<OrderResponse | null> {
   if (!response.ok) {
     const errorText = await response.text();
     throw new Error(errorText || "Error al obtener la orden pendiente.");
+  }
+
+  return response.json();
+}
+export async function getOrders(): Promise<OrderResponse[]> {
+  const response = await fetch(`${API_URL}/orders`);
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText || "Error al obtener órdenes.");
   }
 
   return response.json();

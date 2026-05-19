@@ -16,10 +16,13 @@ export function HomeMenu() {
     setSelected(title);
 
     if (title === "Notificaciones") {
-  router.push("/payment-status");
-  return;
-  }
-
+      router.push("/payment-status");
+      return;
+    }
+    if (title === "Ordenes") {
+      router.push("/(tabs)/orders");
+      return;
+    }
     Alert.alert(title, "Esta opción todavía no tiene pantalla asignada.");
   };
 
