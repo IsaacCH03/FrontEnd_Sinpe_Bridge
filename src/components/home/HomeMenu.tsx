@@ -15,19 +15,28 @@ export function HomeMenu() {
   const handleMenuPress = (title: string) => {
     setSelected(title);
 
-    if (title === "Notificaciones") {
-      router.push("/payment-status");
-      return;
+    switch (title) {
+      case "Notificaciones":
+        router.push("/payment-status");
+        return;
+      case "Ordenes":
+        router.push("/(tabs)/orders");
+        return;
+      case "Ordenes Manual":
+        router.push("/(tabs)/manual-review");
+        return;
+      case "Historial":
+        router.push("/transaction-history");
+        return;
+      case "Fraudes":
+        router.push("/fraud-attempts");
+        return;
+      case "Monitoreo":
+        router.push("/device-status");
+        return;
+      default:
+        Alert.alert(title, "Esta opción todavía no tiene pantalla asignada.");
     }
-    if (title === "Ordenes") {
-      router.push("/(tabs)/orders");
-      return;
-    }
-    if (title === "Ordenes Manual") {
-      router.push("/(tabs)/manual-review");
-      return;
-    }
-    Alert.alert(title, "Esta opción todavía no tiene pantalla asignada.");
   };
 
   return (

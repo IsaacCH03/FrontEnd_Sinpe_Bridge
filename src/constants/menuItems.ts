@@ -8,7 +8,7 @@ export const menuItems = [
   {
     title: "Ordenes Manual",
     description: "Revision manual de ordenes.",
-    icon: "",
+    icon: "📋",
     color: "#7C3AED",
   },
   {
@@ -34,5 +34,17 @@ export const menuItems = [
     description: "Consultar órdenes procesadas anteriormente.",
     icon: "📄",
     color: "#6366F1",
+  },
+  {
+    title: "Fraudes",
+    description: "Revisar intentos de pago sospechosos.",
+    icon: "⚠️",
+    color: "#E85D75",
+  },
+  {
+    title: "Monitoreo",
+    description: "Estado de conexión del teléfono POS.",
+    icon: "📱",
+    color: "#28A745",
   },
 ];
