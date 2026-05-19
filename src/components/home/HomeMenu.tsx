@@ -23,6 +23,10 @@ export function HomeMenu() {
       router.push("/(tabs)/orders");
       return;
     }
+    if (title === "Ordenes Manual") {
+      router.push("/(tabs)/manual-review");
+      return;
+    }
     Alert.alert(title, "Esta opción todavía no tiene pantalla asignada.");
   };
 

@@ -50,6 +50,13 @@ export default function TabLayout() {
           headerShown: true,
         }}
       />
+      <Tabs.Screen
+        name="manual-review"
+        options={{
+          title: "Manual Review",
+          headerShown: true,
+        }}
+      />
     </Tabs>
   );
 }

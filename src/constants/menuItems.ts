@@ -6,6 +6,12 @@ export const menuItems = [
     color: "#7C3AED",
   },
   {
+    title: "Ordenes Manual",
+    description: "Revision manual de ordenes.",
+    icon: "",
+    color: "#7C3AED",
+  },
+  {
     title: "Nueva orden",
     description: "Crear una orden para cobrar por SINPE.",
     icon: "🛒",
