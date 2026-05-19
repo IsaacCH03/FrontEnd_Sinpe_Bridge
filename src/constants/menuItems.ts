@@ -23,4 +23,16 @@ export const menuItems = [
     icon: "📄",
     color: "#6366F1",
   },
+  {
+    title: "Fraudes",
+    description: "Revisar intentos de pago sospechosos.",
+    icon: "⚠️",
+    color: "#E85D75",
+  },
+  {
+    title: "Monitoreo",
+    description: "Estado de conexión del teléfono POS.",
+    icon: "📱",
+    color: "#28A745",
+  },
 ];

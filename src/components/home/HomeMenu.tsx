@@ -15,12 +15,22 @@ export function HomeMenu() {
   const handleMenuPress = (title: string) => {
     setSelected(title);
 
-    if (title === "Notificaciones") {
-  router.push("/payment-status");
-  return;
-  }
-
-    Alert.alert(title, "Esta opción todavía no tiene pantalla asignada.");
+    switch (title) {
+      case "Notificaciones":
+        router.push("/payment-status");
+        return;
+      case "Historial":
+        router.push("/transaction-history");
+        return;
+      case "Fraudes":
+        router.push("/fraud-attempts");
+        return;
+      case "Monitoreo":
+        router.push("/device-status");
+        return;
+      default:
+        Alert.alert(title, "Esta opción todavía no tiene pantalla asignada.");
+    }
   };
 
   return (
