@@ -2,11 +2,13 @@ import { getTransactionHistory } from "@/src/services/transactions/transactionSe
 import { historyStyles as styles } from "@/src/styles/transactionHistoryStyles";
 import { Transaction } from "@/src/types/transaction";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, SafeAreaView, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, SafeAreaView, Text, TextInput, View } from "react-native";
 
 export default function TransactionHistoryScreen() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     loadHistory();
@@ -26,6 +28,18 @@ export default function TransactionHistoryScreen() {
       color: isApproved ? "#065f46" : "#991b1b"
     };
   };
+
+  const filteredTransactions = transactions.filter((t) => {
+    const query = searchQuery.toLowerCase();
+    
+    const ref = t.reference ? t.reference.toLowerCase() : "";
+    const sender = t.senderNumber ? t.senderNumber.toLowerCase() : "";
+
+    return (
+      ref.includes(query) ||
+      sender.includes(query)
+    );
+  });
 
   const renderTransaction = ({ item }: { item: Transaction }) => {
     const badgeColors = getBadgeStyle(item.status);
@@ -59,16 +73,29 @@ export default function TransactionHistoryScreen() {
         <Text style={styles.subtitle}>Consulta de órdenes y pagos procesados</Text>
       </View>
 
+      {/* 3. NUEVO: El campo de texto visual */}
+      <TextInput
+        style={styles.searchInput}
+        placeholder="🔍 Buscar por referencia o celular..."
+        placeholderTextColor="#6e6e80"
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
+
       {loading ? (
         <ActivityIndicator size="large" color="#4F46E5" style={{ marginTop: 40 }} />
       ) : (
         <FlatList
-          data={transactions}
+          data={filteredTransactions}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderTransaction}
           contentContainerStyle={styles.listContent}
           ListEmptyComponent={
-            <Text style={styles.emptyText}>No hay transacciones registradas.</Text>
+            <Text style={styles.emptyText}>
+              {searchQuery !== "" 
+                ? "No se encontraron coincidencias." 
+                : "No hay transacciones registradas."}
+            </Text>
           }
         />
       )}

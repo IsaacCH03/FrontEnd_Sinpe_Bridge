@@ -76,5 +76,18 @@ export const historyStyles = StyleSheet.create({
     color: "#6e6e80",
     marginTop: 40,
     fontSize: 16,
+  },
+  searchInput: {
+    backgroundColor: "#fff",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#eaeaea",
+    marginHorizontal: 20,
+    marginBottom: 16,
+    marginTop: 16,
+    fontSize: 16,
+    color: "#14142B",
   }
 });

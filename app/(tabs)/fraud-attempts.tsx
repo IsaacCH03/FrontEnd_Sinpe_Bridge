@@ -2,11 +2,13 @@ import { getFraudAttempts } from "@/src/services/frauds/fraudService";
 import { fraudStyles as styles } from "@/src/styles/fraudStyles";
 import { FraudAttempt } from "@/src/types/fraudAttempt";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, SafeAreaView, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, SafeAreaView, Text, TextInput, View } from "react-native";
 
 export default function FraudAttemptsScreen() {
   const [frauds, setFrauds] = useState<FraudAttempt[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     loadFrauds();
@@ -18,6 +20,20 @@ export default function FraudAttemptsScreen() {
     setFrauds(data);
     setLoading(false);
   };
+
+  const filteredFrauds = frauds.filter((f) => {
+    const query = searchQuery.toLowerCase();
+    
+    const ref = f.reference ? f.reference.toLowerCase() : "";
+    const type = f.fraudType ? f.fraudType.toLowerCase() : "";
+    const dateString = f.attemptDate ? new Date(f.attemptDate).toLocaleDateString() : "";
+
+    return (
+      ref.includes(query) ||
+      type.includes(query) ||
+      dateString.includes(query)
+    );
+  });
 
   const renderFraud = ({ item }: { item: FraudAttempt }) => {
     return (
@@ -45,16 +61,28 @@ export default function FraudAttemptsScreen() {
         <Text style={styles.subtitle}>Registro de pagos bloqueados o sospechosos</Text>
       </View>
 
+      <TextInput
+        style={styles.searchInput}
+        placeholder="🔍 Buscar referencia, tipo o fecha..."
+        placeholderTextColor="#6e6e80"
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
+
       {loading ? (
         <ActivityIndicator size="large" color="#E85D75" style={{ marginTop: 40 }} />
       ) : (
         <FlatList
-          data={frauds}
+          data={filteredFrauds}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderFraud}
           contentContainerStyle={styles.listContent}
           ListEmptyComponent={
-            <Text style={styles.emptyText}>No se han detectado intentos de fraude.</Text>
+            <Text style={styles.emptyText}>
+              {searchQuery !== "" 
+                ? "No se encontraron fraudes con esa búsqueda." 
+                : "No se han detectado intentos de fraude."}
+            </Text>
           }
         />
       )}
