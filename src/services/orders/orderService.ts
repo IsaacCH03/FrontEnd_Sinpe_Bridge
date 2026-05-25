@@ -63,3 +63,15 @@ export async function getOrders(): Promise<OrderResponse[]> {
 
   return response.json();
 }
+
+export async function searchOrders(query: string): Promise<OrderResponse[]> {
+  const response = await fetch(`${API_URL}/orders/search?query=${query}`);
+
+  if (!response.ok) {
+    const errorText = await response.text();
+
+    throw new Error(errorText || "Error al buscar órdenes.");
+  }
+
+  return response.json();
+}

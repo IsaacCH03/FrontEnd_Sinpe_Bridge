@@ -27,6 +27,6 @@ export function useManualReviews() {
   return {
     reviews,
     loading,
-    reloadReviews: loadReviews,
+    loadReviews,
   };
 }
