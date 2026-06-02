@@ -51,12 +51,19 @@ export default function OrdersScreen() {
   };
 
   const getBadgeStyle = (status: string) => {
-    const isPending = status === "PENDING";
-
-    return {
-      backgroundColor: isPending ? "#fee2e2" : "#d1fae5",
-      color: isPending ? "#991b1b" : "#065f46",
-    };
+    switch (status.toUpperCase()) {
+      case "PAID":
+      case "APPROVED":
+        return { backgroundColor: "#d1fae5", color: "#065f46" }; // Verde
+      case "REJECTED":
+        return { backgroundColor: "#fee2e2", color: "#991b1b" }; // Rojo
+      case "SUSPECTED":
+        return { backgroundColor: "#fef3c7", color: "#92400e" }; // Amarillo
+      case "PENDING":
+        return { backgroundColor: "#e0f2fe", color: "#0369a1" }; // Azul claro para distinguir las pendientes
+      default:
+        return { backgroundColor: "#f3f4f6", color: "#374151" }; // Gris por si llega un estado desconocido
+    }
   };
 
   const renderOrder = ({ item }: any) => {
