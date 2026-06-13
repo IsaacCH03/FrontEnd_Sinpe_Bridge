@@ -5,20 +5,25 @@ import { useEffect, useState } from "react";
 export function useManualReviews() {
   const [reviews, setReviews] = useState<ManualReviewTransaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    loadReviews();
+    void loadReviews();
   }, []);
 
   async function loadReviews() {
     try {
       setLoading(true);
+      setError("");
 
       const data = await getManualReviews();
-
       setReviews(data);
-    } catch (error) {
-      console.log(error);
+    } catch (unknownError) {
+      setError(
+        unknownError instanceof Error
+          ? unknownError.message
+          : "Error inesperado al obtener revisiones.",
+      );
     } finally {
       setLoading(false);
     }
@@ -27,6 +32,7 @@ export function useManualReviews() {
   return {
     reviews,
     loading,
+    error,
     reloadReviews: loadReviews,
   };
 }

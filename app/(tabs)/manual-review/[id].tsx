@@ -1,6 +1,7 @@
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   Pressable,
   SafeAreaView,
@@ -14,63 +15,114 @@ import {
   getManualReviewById,
   rejectReview,
 } from "@/src/services/manualReview/manualReviewService";
+import { ManualReviewTransaction } from "@/src/types/manualReview";
 
 export default function ReviewDetailScreen() {
-  const { id } = useLocalSearchParams();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const reviewId = Number(id);
 
-  const [review, setReview] = useState<any>(null);
+  const [review, setReview] = useState<ManualReviewTransaction | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  const loadReview = useCallback(async () => {
+    if (!Number.isFinite(reviewId)) {
+      setError("El id de revision no es valido.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError("");
+      const data = await getManualReviewById(reviewId);
+      setReview(data);
+    } catch (unknownError) {
+      setError(
+        unknownError instanceof Error
+          ? unknownError.message
+          : "Error inesperado al cargar la revision.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [reviewId]);
 
   useEffect(() => {
-    loadReview();
-  }, []);
+    void loadReview();
+  }, [loadReview]);
 
-  async function loadReview() {
-    const data = await getManualReviewById(Number(id));
-    console.log(data);
-    setReview(data);
-  }
-
-  async function handleApprove() {
+  async function handleAction(action: "approve" | "reject") {
     try {
-      const response = await approveReview(Number(id));
+      setSubmitting(true);
+      const response =
+        action === "approve"
+          ? await approveReview(reviewId)
+          : await rejectReview(reviewId);
 
-      Alert.alert("Éxito", response.message);
-
-      loadReview();
-    } catch (error: any) {
-      Alert.alert("Error", error.message);
+      Alert.alert("Exito", response.message);
+      await loadReview();
+    } catch (unknownError) {
+      Alert.alert(
+        "Error",
+        unknownError instanceof Error
+          ? unknownError.message
+          : "No se pudo procesar la revision.",
+      );
+    } finally {
+      setSubmitting(false);
     }
   }
 
-  async function handleReject() {
-    try {
-      const response = await rejectReview(Number(id));
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.center}>
+        <ActivityIndicator size="large" color="#4F46E5" />
+      </SafeAreaView>
+    );
+  }
 
-      Alert.alert("Éxito", response.message);
-
-      loadReview();
-    } catch (error: any) {
-      Alert.alert("Error", error.message);
-    }
+  if (error) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.errorText}>{error}</Text>
+        <Pressable style={styles.retryButton} onPress={loadReview}>
+          <Text style={styles.buttonText}>Reintentar</Text>
+        </Pressable>
+      </SafeAreaView>
+    );
   }
 
   if (!review) {
-    return null;
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text>No se encontro la revision.</Text>
+      </SafeAreaView>
+    );
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.card}>
         <Text>ID: {review.id}</Text>
-        <Text>Orden: {review.orderId}</Text>
+        <Text>Orden: {review.orderId ?? "Sin orden"}</Text>
         <Text>Estado: {review.actionType}</Text>
         <Text>{review.description}</Text>
 
-        <Pressable style={styles.approveButton} onPress={handleApprove}>
+        <Pressable
+          disabled={submitting}
+          style={[styles.approveButton, submitting && styles.disabledButton]}
+          onPress={() => handleAction("approve")}
+        >
           <Text style={styles.buttonText}>Aprobar</Text>
         </Pressable>
 
-        <Pressable style={styles.rejectButton} onPress={handleReject}>
+        <Pressable
+          disabled={submitting}
+          style={[styles.rejectButton, submitting && styles.disabledButton]}
+          onPress={() => handleAction("reject")}
+        >
           <Text style={styles.buttonText}>Rechazar</Text>
         </Pressable>
       </View>
@@ -83,30 +135,44 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   card: {
     backgroundColor: "#fff",
     padding: 20,
     borderRadius: 10,
   },
-
   approveButton: {
     backgroundColor: "green",
     padding: 15,
     marginTop: 20,
     borderRadius: 10,
   },
-
   rejectButton: {
     backgroundColor: "red",
     padding: 15,
     marginTop: 10,
     borderRadius: 10,
   },
-
+  retryButton: {
+    backgroundColor: "#4F46E5",
+    padding: 15,
+    marginTop: 20,
+    borderRadius: 10,
+  },
+  disabledButton: {
+    opacity: 0.6,
+  },
   buttonText: {
     color: "#fff",
     textAlign: "center",
     fontWeight: "bold",
+  },
+  errorText: {
+    color: "#B91C1C",
+    fontSize: 16,
   },
 });

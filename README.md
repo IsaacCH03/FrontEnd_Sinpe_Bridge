@@ -1,50 +1,53 @@
-# Welcome to your Expo app 👋
+# SINPE Bridge Front
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplicacion movil Expo/React Native para operar el frente POS de SINPE Bridge.
 
-## Get started
+## Requisitos
 
-1. Install dependencies
+- Node.js compatible con Expo 54
+- npm
+- Un backend disponible con los endpoints configurados en `EXPO_PUBLIC_API_URL`
+
+## Configuracion
+
+1. Instalar dependencias:
 
    ```bash
    npm install
    ```
 
-2. Start the app
+2. Crear `.env` basado en `.env.example`:
 
    ```bash
-   npx expo start
+   EXPO_PUBLIC_API_URL=https://tu-api-publica
    ```
 
-In the output, you'll find options to open the app in a
+3. Iniciar la app:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   ```bash
+   npm run start
+   ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Scripts
 
-## Get a fresh project
+- `npm run start`: abre Expo.
+- `npm run android`: abre Expo en Android.
+- `npm run ios`: abre Expo en iOS.
+- `npm run web`: abre Expo Web.
+- `npm run lint`: ejecuta lint.
 
-When you're ready, run:
+## Modulos principales
+
+- Ordenes disponibles.
+- Revision manual de transacciones sospechosas.
+- Notificaciones de pago por SignalR.
+- Historial de transacciones.
+- Intentos de fraude.
+- Monitoreo del telefono POS.
+
+## Validacion recomendada
 
 ```bash
-npm run reset-project
+npm run lint
+npx tsc --noEmit
 ```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.

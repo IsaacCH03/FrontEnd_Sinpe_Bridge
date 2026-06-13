@@ -4,20 +4,25 @@ import { useEffect, useState } from "react";
 export function useOrders() {
   const [orders, setOrders] = useState<OrderResponse[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    loadOrders();
+    void loadOrders();
   }, []);
 
   async function loadOrders() {
     try {
       setLoading(true);
+      setError("");
 
       const data = await getOrders();
-      console.log(data);
       setOrders(data);
-    } catch (error) {
-      console.log(error);
+    } catch (unknownError) {
+      setError(
+        unknownError instanceof Error
+          ? unknownError.message
+          : "Error inesperado al obtener ordenes.",
+      );
     } finally {
       setLoading(false);
     }
@@ -26,6 +31,7 @@ export function useOrders() {
   return {
     orders,
     loading,
+    error,
     reloadOrders: loadOrders,
   };
 }

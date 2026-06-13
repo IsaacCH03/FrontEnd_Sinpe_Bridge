@@ -1,54 +1,24 @@
-import { apiConfig } from "@/src/constants/apiConfig";
+import { requestJson } from "@/src/services/httpClient";
 import { ManualReviewTransaction } from "@/src/types/manualReview";
 
-const API_URL = apiConfig.apiUrl;
-
 export async function getManualReviews(): Promise<ManualReviewTransaction[]> {
-  const response = await fetch(`${API_URL}/manual-review`);
-
-  if (!response.ok) {
-    throw new Error("Error al obtener transacciones.");
-  }
-
-  return response.json();
+  return requestJson<ManualReviewTransaction[]>("/manual-review");
 }
 
 export async function getManualReviewById(
   id: number,
 ): Promise<ManualReviewTransaction> {
-  const response = await fetch(`${API_URL}/manual-review/${id}`);
-
-  if (!response.ok) {
-    throw new Error("Transacción no encontrada.");
-  }
-
-  return response.json();
+  return requestJson<ManualReviewTransaction>(`/manual-review/${id}`);
 }
 
-export async function approveReview(id: number) {
-  const response = await fetch(`${API_URL}/manual-review/${id}/approve`, {
+export async function approveReview(id: number): Promise<{ message: string }> {
+  return requestJson<{ message: string }>(`/manual-review/${id}/approve`, {
     method: "POST",
   });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Error al aprobar.");
-  }
-
-  return data;
 }
 
-export async function rejectReview(id: number) {
-  const response = await fetch(`${API_URL}/manual-review/${id}/reject`, {
+export async function rejectReview(id: number): Promise<{ message: string }> {
+  return requestJson<{ message: string }>(`/manual-review/${id}/reject`, {
     method: "POST",
   });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Error al rechazar.");
-  }
-
-  return data;
 }

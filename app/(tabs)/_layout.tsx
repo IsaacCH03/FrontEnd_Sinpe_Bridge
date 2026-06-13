@@ -27,34 +27,67 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
-        options={{
-          title: "Explore",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="payment-status"
-        options={{
-          href: null,
-          title: "Notificaciones",
-          headerShown: true,
-        }}
-      />
-      <Tabs.Screen
         name="orders"
         options={{
-          title: "Órdenes",
+          title: "Ordenes",
           headerShown: true,
+          href: null,
         }}
       />
       <Tabs.Screen
         name="manual-review"
         options={{
-          title: "Manual Review",
+          title: "Revision manual",
           headerShown: true,
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="manual-review/[id]"
+        options={{
+          title: "Detalle de revision",
+          headerShown: true,
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="payment-status"
+        options={{
+          title: "Notificaciones",
+          headerShown: true,
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="sinpe-message"
+        options={{
+          title: "Registrar pago SINPE",
+          headerShown: true,
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="transaction-history"
+        options={{
+          title: "Historial",
+          headerShown: true,
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="fraud-attempts"
+        options={{
+          title: "Fraudes",
+          headerShown: true,
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="device-status"
+        options={{
+          title: "Monitoreo",
+          headerShown: true,
+          href: null,
         }}
       />
     </Tabs>

@@ -1,36 +1,18 @@
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
+import { requestJson } from "@/src/services/httpClient";
+import { DeviceStatus, MonitoringEvent } from "@/src/types/monitoring";
 
-export const getDeviceStatus = async () => {
-  try {
-    const response = await fetch(`${API_URL}/device-status`);
-    if (!response.ok) throw new Error("Error al obtener el estado del dispositivo");
-    return await response.json();
-  } catch (error) {
-    console.error("Error en getDeviceStatus:", error);
-    return null;
-  }
+export const getDeviceStatus = async (): Promise<DeviceStatus | null> => {
+  return requestJson<DeviceStatus | null>("/device-status", {
+    notFoundReturnsNull: true,
+  });
 };
 
-export const getMonitoringHistory = async () => {
-  try {
-    const response = await fetch(`${API_URL}/monitoring-history`);
-    if (!response.ok) throw new Error("Error al obtener el historial de monitoreo");
-    return await response.json();
-  } catch (error) {
-    console.error("Error en getMonitoringHistory:", error);
-    return [];
-  }
+export const getMonitoringHistory = async (): Promise<MonitoringEvent[]> => {
+  return requestJson<MonitoringEvent[]>("/monitoring-history");
 };
 
-export const sendDeviceHeartbeat = async () => {
-  try {
-    const response = await fetch(`${API_URL}/device-heartbeat`, {
-      method: "POST",
-    });
-    if (!response.ok) throw new Error("Error al enviar el heartbeat");
-    return await response.json();
-  } catch (error) {
-    console.error("Error en sendDeviceHeartbeat:", error);
-    return null;
-  }
+export const sendDeviceHeartbeat = async (): Promise<DeviceStatus> => {
+  return requestJson<DeviceStatus>("/device-heartbeat", {
+    method: "POST",
+  });
 };

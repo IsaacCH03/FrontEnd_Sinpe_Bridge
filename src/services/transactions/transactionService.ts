@@ -1,12 +1,6 @@
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
+import { requestJson } from "@/src/services/httpClient";
+import { Transaction } from "@/src/types/transaction";
 
-export const getTransactionHistory = async () => {
-  try {
-    const response = await fetch(`${API_URL}/transaction-history`);
-    if (!response.ok) throw new Error("Error al obtener el historial de transacciones");
-    return await response.json();
-  } catch (error) {
-    console.error("Error en getTransactionHistory:", error);
-    return [];
-  }
+export const getTransactionHistory = async (): Promise<Transaction[]> => {
+  return requestJson<Transaction[]>("/transaction-history");
 };

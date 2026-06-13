@@ -6,8 +6,10 @@ let connection: signalR.HubConnection | null = null;
 
 export async function startPaymentHubConnection(
   orderId: number,
-  onPaymentConfirmed: (data: PaymentNotification) => void
+  onPaymentConfirmed: (data: PaymentNotification) => void,
 ): Promise<signalR.HubConnection> {
+  await stopPaymentHubConnection();
+
   const newConnection = new signalR.HubConnectionBuilder()
     .withUrl(apiConfig.paymentHubUrl)
     .withAutomaticReconnect()
@@ -16,7 +18,6 @@ export async function startPaymentHubConnection(
   newConnection.on("PaymentConfirmed", onPaymentConfirmed);
 
   await newConnection.start();
-
   await newConnection.invoke("JoinOrderGroup", orderId.toString());
 
   connection = newConnection;
@@ -25,8 +26,12 @@ export async function startPaymentHubConnection(
 }
 
 export async function stopPaymentHubConnection() {
-  if (connection) {
-    await connection.stop();
-    connection = null;
+  if (!connection) {
+    return;
   }
+
+  const activeConnection = connection;
+  connection = null;
+  activeConnection.off("PaymentConfirmed");
+  await activeConnection.stop();
 }

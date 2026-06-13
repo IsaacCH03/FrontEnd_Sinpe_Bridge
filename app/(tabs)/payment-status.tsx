@@ -6,16 +6,11 @@ import { router } from "expo-router";
 import { Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
 
 export default function PaymentStatusScreen() {
-  const {
-    pendingOrder,
-    isLoadingOrder,
-    orderError,
-    reloadPendingOrder,
-  } = usePendingOrder();
+  const { pendingOrder, isLoadingOrder, orderError, reloadPendingOrder } =
+    usePendingOrder();
 
-  const { notification, isConnected } = usePaymentNotifications(
-    pendingOrder?.id ?? null
-  );
+  const { notification, isConnected, connectionError } =
+    usePaymentNotifications(pendingOrder?.id ?? null);
 
   if (isLoadingOrder) {
     return (
@@ -46,9 +41,9 @@ export default function PaymentStatusScreen() {
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.center}>
-          <Text style={styles.title}>No hay órdenes pendientes</Text>
+          <Text style={styles.title}>No hay ordenes pendientes</Text>
           <Text style={styles.errorText}>
-            Cuando se cree una nueva orden, aparecerá aquí.
+            Cuando se cree una nueva orden, aparecera aqui.
           </Text>
 
           <Pressable style={styles.retryButton} onPress={reloadPendingOrder}>
@@ -63,17 +58,17 @@ export default function PaymentStatusScreen() {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
         <Pressable style={styles.backButton} onPress={() => router.back()}>
-          <Text style={styles.backButtonText}>← Volver</Text>
+          <Text style={styles.backButtonText}>Volver</Text>
         </Pressable>
         <View style={styles.header}>
           <View style={styles.logoCircle}>
-            <Text style={styles.logoText}>₡</Text>
+            <Text style={styles.logoText}>CRC</Text>
           </View>
 
-          <Text style={styles.title}>Confirmación de pago</Text>
+          <Text style={styles.title}>Confirmacion de pago</Text>
 
           <Text style={styles.subtitle}>
-            Orden #{pendingOrder.id} pendiente por ₡{pendingOrder.amount}
+            Orden #{pendingOrder.id} pendiente por CRC {pendingOrder.amount}
           </Text>
         </View>
 
@@ -81,6 +76,7 @@ export default function PaymentStatusScreen() {
           orderId={pendingOrder.id}
           notification={notification}
           isConnected={isConnected}
+          connectionError={connectionError}
         />
 
         <Pressable style={styles.retryButton} onPress={reloadPendingOrder}>

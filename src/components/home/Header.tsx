@@ -11,7 +11,7 @@ export function Header() {
       <Text style={styles.title}>Sistema de Punto de Venta</Text>
 
       <Text style={styles.subtitle}>
-        Gestiona órdenes, pagos y confirmaciones SINPE desde un solo lugar.
+        Gestiona ordenes, pagos y confirmaciones SINPE desde un solo lugar.
       </Text>
     </View>
   );
