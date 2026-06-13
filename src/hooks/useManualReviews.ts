@@ -1,17 +1,13 @@
 import { getManualReviews } from "@/src/services/manualReview/manualReviewService";
 import { ManualReviewTransaction } from "@/src/types/manualReview";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export function useManualReviews() {
   const [reviews, setReviews] = useState<ManualReviewTransaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    void loadReviews();
-  }, []);
-
-  async function loadReviews() {
+  const loadReviews = useCallback(async () => {
     try {
       setLoading(true);
       setError("");
@@ -27,12 +23,17 @@ export function useManualReviews() {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    void loadReviews();
+  }, [loadReviews]);
 
   return {
     reviews,
     loading,
     error,
+    loadReviews,
     reloadReviews: loadReviews,
   };
 }

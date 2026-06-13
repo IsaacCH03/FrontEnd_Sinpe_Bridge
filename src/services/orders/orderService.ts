@@ -39,3 +39,9 @@ export async function getPendingOrder(): Promise<OrderResponse | null> {
 export async function getOrders(): Promise<OrderResponse[]> {
   return requestJson<OrderResponse[]>("/orders");
 }
+
+export async function searchOrders(query: string): Promise<OrderResponse[]> {
+  return requestJson<OrderResponse[]>(
+    `/orders/search?query=${encodeURIComponent(query)}`,
+  );
+}
