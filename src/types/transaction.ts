@@ -6,4 +6,5 @@ export type Transaction = {
   senderNumber: string;
   status: string;
   verificationResult: string;
+  orderId?: number;
 };

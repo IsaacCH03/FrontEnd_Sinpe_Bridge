@@ -1,3 +1,4 @@
+import TransactionDetailModal from "@/src/components/transaction/TransactionDetailModal";
 import { getTransactionHistory } from "@/src/services/transactions/transactionService";
 import { historyStyles as styles } from "@/src/styles/transactionHistoryStyles";
 import { Transaction } from "@/src/types/transaction";
@@ -8,7 +9,8 @@ import {
   SafeAreaView,
   Text,
   TextInput,
-  View,
+  TouchableOpacity,
+  View
 } from "react-native";
 
 export default function TransactionHistoryScreen() {
@@ -16,6 +18,9 @@ export default function TransactionHistoryScreen() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
 
   useEffect(() => {
     void loadHistory();
@@ -38,14 +43,6 @@ export default function TransactionHistoryScreen() {
     }
   };
 
-  const getBadgeStyle = (status: string) => {
-    const isApproved = status === "Aprobado";
-    return {
-      backgroundColor: isApproved ? "#d1fae5" : "#fee2e2",
-      color: isApproved ? "#065f46" : "#991b1b",
-    };
-  };
-
   const filteredTransactions = transactions.filter((transaction) => {
     const query = searchQuery.toLowerCase();
     const reference = transaction.reference?.toLowerCase() ?? "";
@@ -54,35 +51,36 @@ export default function TransactionHistoryScreen() {
     return reference.includes(query) || sender.includes(query);
   });
 
-  const renderTransaction = ({ item }: { item: Transaction }) => {
-    const badgeColors = getBadgeStyle(item.status);
+  const handleOpenDetails = (transaction: Transaction) => {
+    setSelectedTransaction(transaction);
+    setModalVisible(true);
+  };
 
+  const renderTransaction = ({ item }: { item: Transaction }) => {
     return (
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <Text style={styles.reference}>Ref: {item.reference}</Text>
-          <Text style={styles.amount}>CRC {item.amount}</Text>
+          {/* Se eliminó la línea del monto CRC */}
         </View>
 
         <View style={styles.cardBody}>
           <Text style={styles.textRow}>
-            Origen: {item.senderNumber || "No registrado"}
+            Teléfono: {item.senderNumber || "No registrado"}
           </Text>
+          
           <Text style={styles.textRow}>
             Fecha: {new Date(item.paymentDate).toLocaleString()}
           </Text>
-          <Text style={styles.textRow}>Detalle: {item.verificationResult}</Text>
 
-          <View
-            style={[
-              styles.badge,
-              { backgroundColor: badgeColors.backgroundColor },
-            ]}
+          {/* Se eliminó por completo el contenedor del badge de estado (Aprobado/Rechazado) */}
+
+          <TouchableOpacity 
+            style={styles.detailsButton}
+            onPress={() => handleOpenDetails(item)}
           >
-            <Text style={[styles.badgeText, { color: badgeColors.color }]}>
-              {item.status}
-            </Text>
-          </View>
+            <Text style={styles.detailsButtonText}>Ver detalles de la orden</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -92,7 +90,7 @@ export default function TransactionHistoryScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.title}>Historial</Text>
-        <Text style={styles.subtitle}>Consulta de ordenes y pagos procesados</Text>
+        <Text style={styles.subtitle}>Consulta de órdenes y pagos procesados</Text>
       </View>
 
       <TextInput
@@ -126,6 +124,12 @@ export default function TransactionHistoryScreen() {
           }
         />
       )}
+
+      <TransactionDetailModal
+        visible={modalVisible}
+        transaction={selectedTransaction}
+        onClose={() => setModalVisible(false)}
+      />
     </SafeAreaView>
   );
 }

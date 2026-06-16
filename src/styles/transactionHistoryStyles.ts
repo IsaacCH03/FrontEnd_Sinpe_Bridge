@@ -89,5 +89,20 @@ export const historyStyles = StyleSheet.create({
     marginTop: 16,
     fontSize: 16,
     color: "#14142B",
+  },
+  detailsButton: {
+    marginTop: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: "#f0f0f5", // Un gris suave
+    borderRadius: 8,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#d1d1e0",
+  },
+  detailsButtonText: {
+    color: "#4F46E5", // Usa el rojo #E85D75 si es en la vista de fraudes
+    fontSize: 14,
+    fontWeight: "600",
   }
 });

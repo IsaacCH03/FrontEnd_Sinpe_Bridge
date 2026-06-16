@@ -1,3 +1,4 @@
+import FraudDetailModal from "@/src/components/fraudAttempt/FraudAttemptDetailModal";
 import { getFraudAttempts } from "@/src/services/frauds/fraudService";
 import { fraudStyles as styles } from "@/src/styles/fraudStyles";
 import { FraudAttempt } from "@/src/types/fraudAttempt";
@@ -8,6 +9,7 @@ import {
   SafeAreaView,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 
@@ -16,6 +18,9 @@ export default function FraudAttemptsScreen() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedFraud, setSelectedFraud] = useState<FraudAttempt | null>(null);
 
   useEffect(() => {
     void loadFrauds();
@@ -41,34 +46,41 @@ export default function FraudAttemptsScreen() {
   const filteredFrauds = frauds.filter((fraud) => {
     const query = searchQuery.toLowerCase();
     const reference = fraud.reference?.toLowerCase() ?? "";
-    const type = fraud.fraudType?.toLowerCase() ?? "";
     const dateString = fraud.attemptDate
       ? new Date(fraud.attemptDate).toLocaleDateString()
       : "";
 
     return (
       reference.includes(query) ||
-      type.includes(query) ||
       dateString.includes(query)
     );
   });
+
+  const handleOpenDetails = (fraud: FraudAttempt) => {
+    setSelectedFraud(fraud);
+    setModalVisible(true);
+  };
 
   const renderFraud = ({ item }: { item: FraudAttempt }) => {
     return (
       <View style={styles.card}>
         <View style={styles.cardHeader}>
+
           <Text style={styles.reference}>Ref: {item.reference}</Text>
-          <Text style={styles.amount}>CRC {item.amount}</Text>
         </View>
 
         <View style={styles.cardBody}>
+
           <Text style={styles.textRow}>
             Fecha: {new Date(item.attemptDate).toLocaleString()}
           </Text>
 
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>{item.fraudType}</Text>
-          </View>
+          <TouchableOpacity 
+            style={styles.detailsButton}
+            onPress={() => handleOpenDetails(item)}
+          >
+            <Text style={styles.detailsButtonText}>Ver detalles de la orden</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -85,7 +97,7 @@ export default function FraudAttemptsScreen() {
 
       <TextInput
         style={styles.searchInput}
-        placeholder="Buscar referencia, tipo o fecha..."
+        placeholder="Buscar referencia o fecha..."
         placeholderTextColor="#6e6e80"
         value={searchQuery}
         onChangeText={setSearchQuery}
@@ -108,12 +120,18 @@ export default function FraudAttemptsScreen() {
           ListEmptyComponent={
             <Text style={styles.emptyText}>
               {searchQuery !== ""
-                ? "No se encontraron fraudes con esa busqueda."
+                ? "No se encontraron fraudes con esa búsqueda."
                 : "No se han detectado intentos de fraude."}
             </Text>
           }
         />
       )}
+
+      <FraudDetailModal
+        visible={modalVisible}
+        fraud={selectedFraud}
+        onClose={() => setModalVisible(false)}
+      />
     </SafeAreaView>
   );
 }

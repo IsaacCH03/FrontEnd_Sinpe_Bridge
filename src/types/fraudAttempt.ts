@@ -4,4 +4,5 @@ export type FraudAttempt = {
   amount: number;
   fraudType: string;
   attemptDate: string;
+  orderId?: number;
 };
