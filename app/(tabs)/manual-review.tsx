@@ -78,15 +78,17 @@ export default function ManualReviewScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.title}>Revisiones Manuales</Text>
-        <Text style={styles.subtitle}>Transacciones sospechosas detectadas</Text>
+        <Text style={styles.subtitle}>
+          Transacciones sospechosas detectadas
+        </Text>
       </View>
 
       {error ? (
         <Text style={styles.emptyText}>{error}</Text>
       ) : (
         <FlatList
-          data={reviews}
-          keyExtractor={(item) => item.id.toString()}
+          data={reviews.filter((item) => item.actionType === "SUSPECTED")}
+          keyExtractor={(item: any) => item.id.toString()}
           renderItem={renderReview}
           contentContainerStyle={styles.listContent}
           ListEmptyComponent={
